@@ -1,13 +1,10 @@
 # Geant4_MRCP_dosi
 
-            MRCP_dosi - internal dosimetry calculations
-        with the ICRP Mesh Reference Computational Phantoms
+                MRCP_dosi - internal dosimetry calculations
+            with the ICRP Mesh Reference Computational Phantoms
                             ----------
-<center> MRCP_dosi - internal dosimetry calculations </center>
-<center> with the ICRP Mesh Reference Computational Phantoms </center>
-<center> ---------- </center>
 
-Authors: Maxime Chauvin
+Authors: **Maxime Chauvin**
 based on code developed by Haegin Han
 
 ## INTRODUCTION
