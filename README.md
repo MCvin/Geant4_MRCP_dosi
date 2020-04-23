@@ -3,6 +3,10 @@
             MRCP_dosi - internal dosimetry calculations
         with the ICRP Mesh Reference Computational Phantoms
                             ----------
+<center> MRCP_dosi - internal dosimetry calculations </center>
+<center> with the ICRP Mesh Reference Computational Phantoms </center>
+<center> ---------- </center>
+
 Authors: Maxime Chauvin
 based on code developed by Haegin Han
 
@@ -11,10 +15,10 @@ based on code developed by Haegin Han
 Geant4_MRCP_dosi is a Geant4 application for internal dosimetry calculations with the ICRP mesh-type adult (male and female) reference computationnal models (phantoms).
 
 The models are not tracked by Git so you have to place the following files in the data/models/ folder:
-- MRCP_AF.ele (384M)
-- MRCP_AF.node (80M)
-- MRCP_AM.ele (367M)
-- MRCP_AM.node (64M)
+- MRCP_AF.ele   (384M)
+- MRCP_AF.node  (80M)
+- MRCP_AM.ele   (367M)
+- MRCP_AM.node  (64M)
 
 ## 1- GEOMETRY DEFINITION
 
@@ -24,10 +28,10 @@ The models are loaded into Geant4 as tetrahedrons using the G4Tet class:
 ```c++
 // save the element (tetrahedron) data as the form of std::vector<G4Tet*>
 tetVector.push_back(new G4Tet("Tet_Solid",
-                                vertexVector[ele[0]],
-                                vertexVector[ele[1]],
-                                vertexVector[ele[2]],
-                                vertexVector[ele[3]]));
+                              vertexVector[ele[0]],
+                              vertexVector[ele[1]],
+                              vertexVector[ele[2]],
+                              vertexVector[ele[3]]));
 ```
 
 ## 2- PHYSICS LIST
