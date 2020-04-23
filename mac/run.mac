@@ -1,4 +1,4 @@
-# Example macro file to run in the batch mode
+# macro file to run in the batch mode
 
 # Set the verbose
 /run/verbose 2
@@ -9,8 +9,9 @@
 # Initialize
 /run/initialize
 
-# source setting
-/control/execute source.mac
+# source settings
+/gun/particle gamma
+/gun/energy 1. MeV
 
-# Set the nps
-/run/beamOn 10000000
+# Set the number of primaries
+/run/beamOn 1000

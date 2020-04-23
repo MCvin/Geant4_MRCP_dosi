@@ -38,7 +38,6 @@
 #include <vector>
 #include <map>
 
-#include "G4UIExecutive.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4ThreeVector.hh"
@@ -49,14 +48,13 @@
 #include "G4Colour.hh"
 
 // *********************************************************************
-// This class is to import the phantom data from *.ele, *.node, and
-// *.material files.
-// -- DataRead: Construct G4Tet by reading data from *.ele and *.node
-//              files
-// -- MaterialRead: Construct G4Material by reading material data from
-//                  *.material file
-// -- ColourRead: Construct std::map that contains G4Colour data
-//                according to data in colour.dat file
+// This class is to import the phantom data from *.ele, *.node, and *.material files.
+// -- DataRead:     Construct G4Tet by reading data 
+//                  from *.ele and *.node files
+// -- MaterialRead: Construct G4Material by reading material data 
+//                  from *.material file
+// -- ColourRead:   Construct std::map that contains G4Colour data
+//                  according to data in colour.dat file
 // -- PrintMaterialInformation: Print a table that contains organ ID,
 //                              number of tetrahedrons, volume, density,
 //                              mass, and name for each organ
@@ -65,7 +63,7 @@
 class TETModelImport
 {
 public:
-	TETModelImport(G4bool isAF, G4UIExecutive* ui);
+	TETModelImport(G4bool isAF);
 	virtual ~TETModelImport() {};
 
 	// get methods
