@@ -30,8 +30,7 @@
 
 #include "TETPhysicsList.hh"
 
-TETPhysicsList::TETPhysicsList()
-:G4VModularPhysicsList()
+TETPhysicsList::TETPhysicsList():G4VModularPhysicsList()
 {
 	G4int verb=0;
 	SetVerboseLevel(verb);

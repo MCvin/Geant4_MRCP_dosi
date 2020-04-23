@@ -43,8 +43,8 @@ TETModelImport::TETModelImport(G4bool isAF)
 	G4cout << "    " << phantomName << " will be used in this simulation               " << G4endl;
 	G4cout << "========================================================================" << G4endl;
 
-	G4String eleFile      =  "phantoms/" + phantomName + ".ele";
-	G4String nodeFile     =  "phantoms/" + phantomName + ".node";
+	G4String eleFile      =  "models/" + phantomName + ".ele";
+	G4String nodeFile     =  "models/" + phantomName + ".node";
 	G4String materialFile =  phantomName + "_material.dat";
 
 	// read phantom data files (*.ele, *.node)
