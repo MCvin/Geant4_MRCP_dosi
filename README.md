@@ -120,13 +120,13 @@ without visualisation.
 
 ## B - HOW TO BUILD
 
-- You need to have the G4 environment variables set up in your terminal session. 
+You need to have the G4 environment variables set up in your terminal session. 
 If it is not done in your .bashrc or .profile file you need to do this first 
 with your own Geant4 install path:
     ```bash
     source /usr/share/geant4/geant4-install/bin/geant4.sh
     ```
-- Go to the build directory and run:
+Go to the build directory and run:
     ```bash
     cmake ../
     make
@@ -134,7 +134,7 @@ with your own Geant4 install path:
 
 ## C - HOW TO RUN
 
-- Execute MRCP_dosi in interactive mode with visualization:
+Execute MRCP_dosi in interactive mode with visualization:
     ```
     ./MRCP_dosi -m [MODEL] -s [SOURCE ID]
     ./MRCP_dosi -m AF -s 9500
@@ -146,7 +146,7 @@ with your own Geant4 install path:
     Idle> exit
     ```
 
-- Execute MRCP_dosi in batch mode with macro files 
+Execute MRCP_dosi in batch mode with macro files 
     (without visualization):
     ```
     ./MRCP_dosi -m [MODEL] -s [SOURCE ID] -i [INPUT MACRO] -o [OUTPUT]
@@ -155,7 +155,7 @@ with your own Geant4 install path:
 
 ## D - MULTI-THREADED MODE
 
-- This application can be run in multi-threaded mode if Geant4 was 
+This application can be run in multi-threaded mode if Geant4 was 
 compiled in multi-threaded mode.
 
-- The number of threads can be set in the input macro file (see mac/run.mac)
+The number of threads can be set in the input macro file (see mac/run.mac)
