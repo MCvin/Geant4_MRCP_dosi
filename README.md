@@ -123,35 +123,35 @@ without visualisation.
 You need to have the G4 environment variables set up in your terminal session. 
 If it is not done in your .bashrc or .profile file you need to do this first 
 with your own Geant4 install path:
-    ```bash
-    source /usr/share/geant4/geant4-install/bin/geant4.sh
-    ```
+```bash
+source /usr/share/geant4/geant4-install/bin/geant4.sh
+```
 Go to the build directory and run:
-    ```bash
-    cmake ../
-    make
-    ```
+```bash
+cmake ../
+make
+```
 
 ## C - HOW TO RUN
 
 Execute MRCP_dosi in interactive mode with visualization:
-    ```
-    ./MRCP_dosi -m [MODEL] -s [SOURCE ID]
-    ./MRCP_dosi -m AF -s 9500
-    ```
-    and type in the commands you want line by line:
-    ```
-    Idle> /tracking/verbose 2
-    Idle> ...
-    Idle> exit
-    ```
+```
+./MRCP_dosi -m [MODEL] -s [SOURCE ID]
+./MRCP_dosi -m AF -s 9500
+```
+and type in the commands you want line by line:
+```
+Idle> /tracking/verbose 2
+Idle> ...
+Idle> exit
+```
 
 Execute MRCP_dosi in batch mode with macro files 
-    (without visualization):
-    ```
-    ./MRCP_dosi -m [MODEL] -s [SOURCE ID] -i [INPUT MACRO] -o [OUTPUT]
-    ./MRCP_dosi -m AF -s 9500 -i ../mac/run.mac -o ../output/output.dat
-    ```
+(without visualization):
+```
+./MRCP_dosi -m [MODEL] -s [SOURCE ID] -i [INPUT MACRO] -o [OUTPUT]
+./MRCP_dosi -m AF -s 9500 -i ../mac/run.mac -o ../output/output.dat
+```
 
 ## D - MULTI-THREADED MODE
 
