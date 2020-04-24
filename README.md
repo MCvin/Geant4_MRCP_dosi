@@ -48,73 +48,50 @@ RegisterPhysics(new G4DecayPhysics());
 // Radioactive decay
 RegisterPhysics(new G4RadioactiveDecayPhysics());
 ```
- 	 
+
 ## 4 - SOURCE
 
-- source organ can be defined by using -i option.
-- source particle and the particle energy can be specified
-in source.mac file by using macro commands for 
-G4ParticlGun (/gun/).
+The particles are generated from a region of the model specified by 
+the -s option followed by the ID of the source organ/tissue region.
 
-   The generation of particule is done using the new General Particle Source. 
-   Documentation for this can be found in:
-   http://reat.space.qinetiq.com/gps/
-   The default beam set in vis1.mac and run1.mac is a parallele beam of 
-   gamma photons directed towards the instrument, along Z.
-   The energy is set by the command /gps/ene/mono 59.5 keV
-   and the polarization angle by /gps/polarization 1. 0. 0. # 0 deg
-   
+The particle type and energy can be defined in the mac/run.mac input file 
+with macro commands for G4ParticleGun:
+```
+/gun/particle gamma
+/gun/energy 1. MeV
+```
+ToDo: set the particle type and energy with command line arguments -p and -e
+
 ## 5 - SCORER AND OUTPUT
-example.out file in each folder is the result file for example.in. The result
-  file provides absorbed doses for all organ IDs for TM model listed in Appendix A.
 
-   A HIT is a record, track per track (even step per step), of all the 
-   informations needed to simulate and analyse the detector response.
-   
-   In PoGOSim the slow, fast and BGO scintillators are considered as the 
-   detector. Therefore they are declared 'sensitive detectors' (SD) in
-   the DetectorConstruction class. 
-   
-   Then, a Hit is defined as a set of 4 informations per step, inside 
-   the chambers, namely:
-    (- the track identifier (an integer),
-    - the chamber number,
-    - the total energy deposit in this step,
-    - the position of the deposit.)
-   
-   A given hit is an instance of the class TrackerHit which is created 
-   during the tracking of a particle, step by step, in the method 
-   TrackerSD::ProcessHits(). This hit is inserted in a HitsCollection.
+Energy deposits are scored inside the model and saved in a map with the 
+associated organ/tissue ID where they occured.
 
-   EventAction::EndOfEventAction() collects informations event per event
-   from the hits collections, and print every hits in a file (via the method 
-   EventAction::PrintHitsCollection(TrackerHitsCollection* HC, G4String name)).
+The simulation ouput an ascii file which provides absorbed dose, uncertainty 
+and masses for all organs/tissues of the model. The output filename is 
+specified using the -o argument.
 
 ## 6 - PSEUDO RANDOM GENERATOR
 
-It is important to note that the (default) MixMax random number generator 
+>"It is important to note that the (default) MixMax random number generator 
 (available since version 10.3) is the recommended engine for MT jobs since it 
-guarantees divergent number histories even for consecutive random number seeds.
+guarantees divergent number histories even for consecutive random number seeds."
 
 See [Random Number Generation Seeding in MT](http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForToolkitDeveloper/html/OOAnalysisDesign/Multithreading/mt.html#random-number-generation-seeding-in-mt)
 
 ## A - VISUALISATION
 
-The visualization manager is set via the G4VisExecutive class
-in the main() function in the MRCP_dosi.cc file.
+The visualization manager is set via the G4VisExecutive class in the main() 
+function of MRCP_dosi.cc.
 
-The initialisation of the drawing is done via a set of /vis/ commands
-in the macro vis.mac. 
+The initialisation of the drawing is done via a set of /vis/ commands in the 
+macro vis.mac. This macro is automatically read from the main function when 
+the application is run in interactive mode.
 
-This macro is automatically read from the main function when the application is 
-run in interactive mode.
+The tracks are automatically drawn at the end of each event, accumulated for 
+all events and erased at the beginning of the next run.
 
-The tracks are automatically drawn at the end of each event, accumulated
-for all events and erased at the beginning of the next run.
-
-Note:
-
-The memory required for the visualisation is ~35 GB when the code is
+Note: The memory required for the visualisation is ~35 GB when the code is
 run on a single thread. The application requires less than 10 GB in batch mode 
 without visualisation.
 
@@ -146,8 +123,7 @@ Idle> ...
 Idle> exit
 ```
 
-Execute MRCP_dosi in batch mode with macro files 
-(without visualization):
+Execute MRCP_dosi in batch mode with macro files (without visualization):
 ```
 ./MRCP_dosi -m [MODEL] -s [SOURCE ID] -i [INPUT MACRO] -o [OUTPUT]
 ./MRCP_dosi -m AF -s 9500 -i ../mac/run.mac -o ../output/output.dat
@@ -155,7 +131,7 @@ Execute MRCP_dosi in batch mode with macro files
 
 ## D - MULTI-THREADED MODE
 
-This application can be run in multi-threaded mode if Geant4 was 
-compiled in multi-threaded mode.
+This application can be run in multi-threaded mode if Geant4 was compiled in 
+multi-threaded mode.
 
 The number of threads can be set in the input macro file (see mac/run.mac)
