@@ -60,6 +60,7 @@ with macro commands for G4ParticleGun:
 /gun/particle gamma
 /gun/energy 1. MeV
 ```
+
 ToDo: set the particle type and energy with command line arguments -p and -e
 
 ## 5 - SCORER AND OUTPUT
@@ -70,6 +71,8 @@ associated organ/tissue ID where they occured.
 The simulation ouput an ascii file which provides absorbed dose, uncertainty 
 and masses for all organs/tissues of the model. The output filename is 
 specified using the -o argument.
+
+ToDo: add a new ouput with edep and absorbed dose for each tetrahedron.
 
 ## 6 - PSEUDO RANDOM GENERATOR
 
@@ -131,7 +134,6 @@ Execute MRCP_dosi in batch mode with macro files (without visualization):
 
 ## D - MULTI-THREADED MODE
 
-This application can be run in multi-threaded mode if Geant4 was compiled in 
-multi-threaded mode.
-
-The number of threads can be set in the input macro file (see mac/run.mac)
+This application can be run in multi-threaded mode if Geant4 was compiled 
+in multi-threaded mode. The number of threads can be set in the input macro 
+file (see mac/run.mac)
