@@ -22,7 +22,7 @@ the data/models/ folder:
 ## 2 - GEOMETRY DEFINITION
 
 The geometry is build from a tetrahedral mesh model specified by the -m (model) 
-option followed by the model name (ex: -m AF).
+option followed by the model name (AF or AM).
 
 The models are loaded into Geant4 as tetrahedrons using the G4Tet class:
 ```c++
