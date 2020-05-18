@@ -21,8 +21,8 @@ the data/models/ folder:
 
 ## 2 - GEOMETRY DEFINITION
 
-The geometry is build from the ICRP tetrahedral mesh models in the data/models/ 
-folder.
+The geometry is build from a tetrahedral mesh model specified by the -m (model) 
+option followed by the model name (ex: -m AF).
 
 The models are loaded into Geant4 as tetrahedrons using the G4Tet class:
 ```c++
