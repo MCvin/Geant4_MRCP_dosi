@@ -21,8 +21,8 @@ the data/models/ folder:
 
 ## 2 - GEOMETRY DEFINITION
 
-The geometry is build from the tetrahedral mesh models provided in the folder 
-data/models/
+The geometry is build from the ICRP tetrahedral mesh models in the data/models/ 
+folder.
 
 The models are loaded into Geant4 as tetrahedrons using the G4Tet class:
 ```c++
@@ -52,13 +52,13 @@ RegisterPhysics(new G4RadioactiveDecayPhysics());
 ## 4 - SOURCE
 
 The particles are generated from a region of the model specified by 
-the -s option followed by the ID of the source organ/tissue region.
+the -s (source) option followed by the ID of the source organ/tissue region.
 
 The particle type and energy can be defined in the mac/run.mac input file 
 with macro commands for G4ParticleGun:
 ```
-/gun/particle gamma
-/gun/energy 1. MeV
+/gun/particle  gamma
+/gun/energy    1. MeV
 ```
 
 ToDo: set the particle type and energy with command line arguments -p and -e
@@ -76,11 +76,11 @@ ToDo: add a new ouput with edep and absorbed dose for each tetrahedron.
 
 ## 6 - PSEUDO RANDOM GENERATOR
 
+From [Random Number Generation Seeding in MT](http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForToolkitDeveloper/html/OOAnalysisDesign/Multithreading/mt.html#random-number-generation-seeding-in-mt):
+
 >"It is important to note that the (default) MixMax random number generator 
 (available since version 10.3) is the recommended engine for MT jobs since it 
 guarantees divergent number histories even for consecutive random number seeds."
-
-See [Random Number Generation Seeding in MT](http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForToolkitDeveloper/html/OOAnalysisDesign/Multithreading/mt.html#random-number-generation-seeding-in-mt)
 
 ## A - VISUALISATION
 
@@ -91,12 +91,12 @@ The initialisation of the drawing is done via a set of /vis/ commands in the
 macro vis.mac. This macro is automatically read from the main function when 
 the application is run in interactive mode.
 
-The tracks are automatically drawn at the end of each event, accumulated for 
+The tracks are drawn at the end of each event, accumulated for 
 all events and erased at the beginning of the next run.
 
 Note: The memory required for the visualisation is ~35 GB when the code is
-run on a single thread. The application requires less than 10 GB in batch mode 
-without visualisation.
+run on a single thread. The application requires less than 10 GB without 
+visualisation (batch mode).
 
 ## B - HOW TO BUILD
 
@@ -106,7 +106,7 @@ with your own Geant4 install path:
 ```bash
 source /usr/share/geant4/geant4-install/bin/geant4.sh
 ```
-Go to the build directory and run:
+Create a build directory, and inside it run:
 ```bash
 cmake ../
 make
@@ -132,8 +132,8 @@ Execute MRCP_dosi in batch mode with macro files (without visualization):
 ./MRCP_dosi -m AF -s 9500 -i ../mac/run.mac -o ../output/output.dat
 ```
 
-## D - MULTI-THREADED MODE
+## D - MULTITHREADED MODE
 
-This application can be run in multi-threaded mode if Geant4 was compiled 
-in multi-threaded mode. The number of threads can be set in the input macro 
-file (see mac/run.mac)
+This application can (and should) be run in multithreaded mode if Geant4 was 
+build with support for multithreading (GEANT4_BUILD_MULTITHREADED=ON). 
+The number of threads can be set in the input macro file (see mac/run.mac).
