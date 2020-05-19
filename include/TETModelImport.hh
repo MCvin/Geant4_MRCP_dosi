@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETModelImport.hh
-// \file   MRCP_GEANT4/Internal/include/TETModelImport.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETModelImport.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETModelImport_h
@@ -49,9 +50,9 @@
 
 // *********************************************************************
 // This class is to import the phantom data from *.ele, *.node, and *.material files.
-// -- DataRead:     Construct G4Tet by reading data 
+// -- DataRead:     Construct G4Tet by reading data
 //                  from *.ele and *.node files
-// -- MaterialRead: Construct G4Material by reading material data 
+// -- MaterialRead: Construct G4Material by reading material data
 //                  from *.material file
 // -- ColourRead:   Construct std::map that contains G4Colour data
 //                  according to data in colour.dat file
@@ -63,51 +64,50 @@
 class TETModelImport
 {
 public:
-	TETModelImport(G4bool isAF);
-	virtual ~TETModelImport() {};
+    TETModelImport(G4bool isAF);
+    virtual ~TETModelImport(){};
 
-	// get methods
-	G4String      GetPhantomName()           { return phantomName; };
-	G4Material*   GetMaterial(G4int idx)     { return materialMap[idx];}
-	G4int         GetNumTetrahedron()        { return tetVector.size();}
-	G4int         GetMaterialIndex(G4int idx){ return materialVector[idx]; }
-	G4Tet*        GetTetrahedron(G4int idx)  { return tetVector[idx]; }
-	G4double      GetVolume(G4int idx)       { return volumeMap[idx]; }
-	std::map<G4int, G4double> GetMassMap()   { return massMap; }
-	std::map<G4int, G4Colour> GetColourMap() { return colourMap; }
-	G4ThreeVector GetPhantomSize()           { return phantomSize; }
-	G4ThreeVector GetPhantomBoxMin()         { return boundingBox_Min; }
-	G4ThreeVector GetPhantomBoxMax()         { return boundingBox_Max; }
+    // get methods
+    G4String                GetPhantomName() { return phantomName; };
+    G4Material       *GetMaterial(G4int idx) { return materialMap[idx]; }
+    G4int                GetNumTetrahedron() { return tetVector.size(); }
+    G4int        GetMaterialIndex(G4int idx) { return materialVector[idx]; }
+    G4Tet         *GetTetrahedron(G4int idx) { return tetVector[idx]; }
+    G4double            GetVolume(G4int idx) { return volumeMap[idx]; }
+    std::map<G4int, G4double>   GetMassMap() { return massMap; }
+    std::map<G4int, G4Colour> GetColourMap() { return colourMap; }
+    G4ThreeVector           GetPhantomSize() { return phantomSize; }
+    G4ThreeVector         GetPhantomBoxMin() { return boundingBox_Min; }
+    G4ThreeVector         GetPhantomBoxMax() { return boundingBox_Max; }
 
 private:
+    // methods
+    void DataRead(G4String, G4String);
+    void MaterialRead(G4String);
+    void ColourRead();
+    void PrintMaterialInfomation();
 
-	// methods
-	void DataRead(G4String, G4String);
-	void MaterialRead(G4String);
-	void ColourRead();
-	void PrintMaterialInfomation();
+    G4String phantomDataPath;
+    G4String phantomName;
 
-	G4String phantomDataPath;
-	G4String phantomName;
+    G4ThreeVector boundingBox_Min;
+    G4ThreeVector boundingBox_Max;
+    G4ThreeVector phantomSize;
 
-	G4ThreeVector boundingBox_Min;
-	G4ThreeVector boundingBox_Max;
-	G4ThreeVector phantomSize;
+    std::vector<G4ThreeVector> vertexVector;
+    std::vector<G4Tet *>       tetVector;
+    std::vector<G4int *>       eleVector;
+    std::vector<G4int>         materialVector;
+    std::map<G4int, G4int>     numTetMap;
+    std::map<G4int, G4double>  volumeMap;
+    std::map<G4int, G4double>  massMap;
+    std::map<G4int, G4Colour>  colourMap;
 
-	std::vector<G4ThreeVector> vertexVector;
-	std::vector<G4Tet*>        tetVector;
-	std::vector<G4int*>        eleVector;
-	std::vector<G4int>         materialVector;
-	std::map<G4int, G4int>     numTetMap;
-	std::map<G4int, G4double>  volumeMap;
-	std::map<G4int, G4double>  massMap;
-	std::map<G4int, G4Colour>  colourMap;
-
-	std::map<G4int, std::vector<std::pair<G4int, G4double>>> materialIndexMap;
-	std::vector<G4int>                                       materialIndex;
-	std::map<G4int, G4Material*>                             materialMap;
-	std::map<G4int, G4double>                                densityMap;
-	std::map<G4int, G4String>                                organNameMap;
+    std::map<G4int, std::vector<std::pair<G4int, G4double>>> materialIndexMap;
+    std::vector<G4int>            materialIndex;
+    std::map<G4int, G4Material *> materialMap;
+    std::map<G4int, G4double>     densityMap;
+    std::map<G4int, G4String>     organNameMap;
 };
 
 #endif

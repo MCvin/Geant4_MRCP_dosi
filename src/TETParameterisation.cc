@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETParameterisation.cc
-// \file   MRCP_GEANT4/Internal/src/TETParameterisation.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETParameterisation.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETParameterisation.hh"
@@ -33,45 +34,47 @@
 #include "G4VisExecutive.hh"
 #include "G4RunManager.hh"
 
-TETParameterisation::TETParameterisation(TETModelImport* _tetData)
-: G4VPVParameterisation(), tetData(_tetData)
+TETParameterisation::TETParameterisation(TETModelImport *_tetData)
+    : G4VPVParameterisation(), tetData(_tetData)
 {
-	// initialise visAttMap which contains G4VisAttributes* for each organ
-	auto colourMap =  tetData->GetColourMap();
-	for(auto colour : colourMap){
-		visAttMap[colour.first] = new G4VisAttributes(colour.second);
-	}
+    // initialise visAttMap which contains G4VisAttributes* for each organ
+    auto colourMap = tetData->GetColourMap();
+    for (auto colour : colourMap)
+    {
+        visAttMap[colour.first] = new G4VisAttributes(colour.second);
+    }
 
-	if(colourMap.size()) isforVis = true;
-	else                 isforVis = false;
+    if (colourMap.size())
+        isforVis = true;
+    else
+        isforVis = false;
 }
 
 TETParameterisation::~TETParameterisation()
-{}
-
-G4VSolid* TETParameterisation::ComputeSolid(
-    		       const G4int copyNo, G4VPhysicalVolume* )
 {
-	// return G4Tet*
-	return tetData->GetTetrahedron(copyNo);
 }
 
-void TETParameterisation::ComputeTransformation(
-                   const G4int,G4VPhysicalVolume*) const
-{}
-
-G4Material* TETParameterisation::ComputeMaterial(const G4int copyNo,
-		G4VPhysicalVolume* phy,
-		const G4VTouchable*)
+G4VSolid *TETParameterisation::ComputeSolid(const G4int copyNo, G4VPhysicalVolume *)
 {
-	// set the colour for each organ if visualization is required
-	if(isforVis){
-		G4int idx = tetData->GetMaterialIndex(copyNo);
-		phy->GetLogicalVolume()->SetVisAttributes(visAttMap[idx]);
-	}
-
-	// return the material data for each material index
-	return tetData->GetMaterial(tetData->GetMaterialIndex(copyNo));
+    // return G4Tet*
+    return tetData->GetTetrahedron(copyNo);
 }
 
+void TETParameterisation::ComputeTransformation(const G4int, G4VPhysicalVolume *) const
+{
+}
 
+G4Material *TETParameterisation::ComputeMaterial(const G4int copyNo,
+                                                 G4VPhysicalVolume *phy,
+                                                 const G4VTouchable *)
+{
+    // set the colour for each organ if visualization is required
+    if (isforVis)
+    {
+        G4int idx = tetData->GetMaterialIndex(copyNo);
+        phy->GetLogicalVolume()->SetVisAttributes(visAttMap[idx]);
+    }
+
+    // return the material data for each material index
+    return tetData->GetMaterial(tetData->GetMaterialIndex(copyNo));
+}

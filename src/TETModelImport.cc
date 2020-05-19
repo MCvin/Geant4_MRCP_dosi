@@ -24,247 +24,265 @@
 // ********************************************************************
 //
 // TETModelImport.cc
-// \file   MRCP_GEANT4/Internal/src/TETModelImport.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETModelImport.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETModelImport.hh"
 
 TETModelImport::TETModelImport(G4bool isAF)
 {
-	// set path for phantom data
-	phantomDataPath = "../data";
+    // set path for phantom data
+    phantomDataPath = "../data";
 
-	// set phantom name
-	if (isAF) phantomName = "MRCP_AF";
-	else      phantomName = "MRCP_AM";
+    // set phantom name
+    if (isAF)
+        phantomName = "MRCP_AF";
+    else
+        phantomName = "MRCP_AM";
 
-	G4cout << "========================================================================" << G4endl;
-	G4cout << "    " << phantomName << " will be used in this simulation               " << G4endl;
-	G4cout << "========================================================================" << G4endl;
+    G4cout << "========================================================================" << G4endl;
+    G4cout << "    " << phantomName << " will be used in this simulation               " << G4endl;
+    G4cout << "========================================================================" << G4endl;
 
-	G4String eleFile      =  "models/" + phantomName + ".ele";
-	G4String nodeFile     =  "models/" + phantomName + ".node";
-	G4String materialFile =  phantomName + "_material.dat";
+    G4String eleFile = "models/" + phantomName + ".ele";
+    G4String nodeFile = "models/" + phantomName + ".node";
+    G4String materialFile = phantomName + "_material.dat";
 
-	// read phantom data files (*.ele, *.node)
-	DataRead(eleFile, nodeFile);
-	// read material file (*_material.dat)
-	MaterialRead(materialFile);
-	// read colour data file (MRCP_colour.dat)
-	ColourRead();
-	// print the summary of phantom information
-	PrintMaterialInfomation();
+    // read phantom data files (*.ele, *.node)
+    DataRead(eleFile, nodeFile);
+    // read material file (*_material.dat)
+    MaterialRead(materialFile);
+    // read colour data file (MRCP_colour.dat)
+    ColourRead();
+    // print the summary of phantom information
+    PrintMaterialInfomation();
 }
 
 void TETModelImport::DataRead(G4String eleFile, G4String nodeFile)
 {
-	G4String tempStr;
-	G4int tempInt;
+    G4String tempStr;
+    G4int tempInt;
 
-	// Read *.node file
-	//
-	std::ifstream ifpNode;
+    // Read *.node file
+    std::ifstream ifpNode;
 
-	ifpNode.open((phantomDataPath + "/" + nodeFile).c_str());
-	if (!ifpNode.is_open()) {
-		// exception for the case when there is no *.node file
-		G4Exception("TETModelImport::DataRead","",FatalErrorInArgument,
-					G4String("      There is no " + nodeFile ).c_str());
-	}
-	G4cout << "  Opening TETGEN node (vertex points: x y z) file '" << nodeFile << "'" << G4endl;
+    ifpNode.open((phantomDataPath + "/" + nodeFile).c_str());
+    if (!ifpNode.is_open())
+    {
+        // exception for the case when there is no *.node file
+        G4Exception("TETModelImport::DataRead", "", FatalErrorInArgument,
+                    G4String("      There is no " + nodeFile).c_str());
+    }
+    G4cout << "  Opening TETGEN node (vertex points: x y z) file '" << nodeFile << "'" << G4endl;
 
-	G4int numVertex;
-	G4double xPos, yPos, zPos;
-	G4double xMin(DBL_MAX), yMin(DBL_MAX), zMin(DBL_MAX);
-	G4double xMax(DBL_MIN), yMax(DBL_MIN), zMax(DBL_MIN);
+    G4int numVertex;
+    G4double xPos, yPos, zPos;
+    G4double xMin(DBL_MAX), yMin(DBL_MAX), zMin(DBL_MAX);
+    G4double xMax(DBL_MIN), yMax(DBL_MIN), zMax(DBL_MIN);
 
-	ifpNode >> numVertex >> tempInt >> tempInt >> tempInt;
+    ifpNode >> numVertex >> tempInt >> tempInt >> tempInt;
 
-	for (G4int i = 0; i < numVertex; i++) {
-		ifpNode >> tempInt >> xPos >> yPos >> zPos;
-		// set the unit
-		xPos*=cm;
-		yPos*=cm;
-		zPos*=cm;
+    for (G4int i = 0; i < numVertex; i++)
+    {
+        ifpNode >> tempInt >> xPos >> yPos >> zPos;
+        // set the unit
+        xPos *= cm;
+        yPos *= cm;
+        zPos *= cm;
 
-		// save the node data as the form of std::vector<G4ThreeVector>
-		vertexVector.push_back(G4ThreeVector(xPos, yPos, zPos));
+        // save the node data as the form of std::vector<G4ThreeVector>
+        vertexVector.push_back(G4ThreeVector(xPos, yPos, zPos));
 
-		// to get the information of the bounding box of phantom
+        // to get the information of the bounding box of phantom
 		if (xPos < xMin) xMin = xPos;
 		if (xPos > xMax) xMax = xPos;
 		if (yPos < yMin) yMin = yPos;
 		if (yPos > yMax) yMax = yPos;
 		if (zPos < zMin) zMin = zPos;
 		if (zPos > zMax) zMax = zPos;
-	}
+    }
 
-	// set the variables for the bounding box and phantom size
-	boundingBox_Min = G4ThreeVector(xMin, yMin, zMin);
-	boundingBox_Max = G4ThreeVector(xMax, yMax, zMax);
-	phantomSize = G4ThreeVector(xMax - xMin, yMax - yMin, zMax - zMin);
+    // set the variables for the bounding box and phantom size
+    boundingBox_Min = G4ThreeVector(xMin, yMin, zMin);
+    boundingBox_Max = G4ThreeVector(xMax, yMax, zMax);
+    phantomSize = G4ThreeVector(xMax - xMin, yMax - yMin, zMax - zMin);
 
-	ifpNode.close();
+    ifpNode.close();
 
-	// Read *.ele file
-	//
-	std::ifstream ifpEle;
+    // Read *.ele file
+    std::ifstream ifpEle;
 
-	ifpEle.open((phantomDataPath + "/" + eleFile).c_str());
-	if (!ifpEle.is_open()) {
-		// exception for the case when there is no *.ele file
-		G4Exception("TETModelImport::DataRead","",FatalErrorInArgument,
-					G4String("      There is no " + eleFile ).c_str());
-	}
-	G4cout << "  Opening TETGEN elements (tetrahedron with node No.) file '" << eleFile << "'" << G4endl;
+    ifpEle.open((phantomDataPath + "/" + eleFile).c_str());
+    if (!ifpEle.is_open())
+    {
+        // exception for the case when there is no *.ele file
+        G4Exception("TETModelImport::DataRead", "", FatalErrorInArgument,
+                    G4String("      There is no " + eleFile).c_str());
+    }
+    G4cout << "  Opening TETGEN elements (tetrahedron with node No.) file '" << eleFile << "'" << G4endl;
 
-	G4int numEle;
+    G4int numEle;
 
-	ifpEle >> numEle  >> tempInt >> tempInt;
+    ifpEle >> numEle >> tempInt >> tempInt;
 
-	for (G4int i = 0; i < numEle; i++) {
-		ifpEle >> tempInt;
-		G4int* ele = new G4int[4];
-		for (G4int j = 0; j < 4; j++) {
-			ifpEle >> tempInt;
-			ele[j] = tempInt;
-		}
-		eleVector.push_back(ele);
-		ifpEle >> tempInt;
-		materialVector.push_back(tempInt);
+    for (G4int i = 0; i < numEle; i++)
+    {
+        ifpEle >> tempInt;
+        G4int *ele = new G4int[4];
+        for (G4int j = 0; j < 4; j++)
+        {
+            ifpEle >> tempInt;
+            ele[j] = tempInt;
+        }
+        eleVector.push_back(ele);
+        ifpEle >> tempInt;
+        materialVector.push_back(tempInt);
 
-		// save the element (tetrahedron) data as the form of std::vector<G4Tet*>
-		tetVector.push_back(new G4Tet("Tet_Solid",
-							   		  vertexVector[ele[0]],
-									  vertexVector[ele[1]],
-									  vertexVector[ele[2]],
-									  vertexVector[ele[3]]));
+        // save the element (tetrahedron) data as the form of std::vector<G4Tet*>
+        tetVector.push_back(new G4Tet("Tet_Solid",
+                                      vertexVector[ele[0]],
+                                      vertexVector[ele[1]],
+                                      vertexVector[ele[2]],
+                                      vertexVector[ele[3]]));
 
-		// calculate the total volume and the number of tetrahedrons for each organ
-		std::map<G4int, G4double>::iterator FindIter = volumeMap.find(materialVector[i]);
+        // calculate the total volume and the number of tetrahedrons for each organ
+        std::map<G4int, G4double>::iterator FindIter = volumeMap.find(materialVector[i]);
 
-		if (FindIter != volumeMap.end()) {
-			FindIter->second += tetVector[i]->GetCubicVolume();
-			numTetMap[materialVector[i]]++;
-		}
-		else {
-			volumeMap[materialVector[i]] = tetVector[i]->GetCubicVolume();
-			numTetMap[materialVector[i]] = 1;
-		}
-	}
+        if (FindIter != volumeMap.end())
+        {
+            FindIter->second += tetVector[i]->GetCubicVolume();
+            numTetMap[materialVector[i]]++;
+        }
+        else
+        {
+            volumeMap[materialVector[i]] = tetVector[i]->GetCubicVolume();
+            numTetMap[materialVector[i]] = 1;
+        }
+    }
 
-	ifpEle.close();
+    ifpEle.close();
 }
 
 void TETModelImport::MaterialRead(G4String materialFile)
 {
-	// Read material file (*.material)
-	//
-	std::ifstream ifpMat;
+    // Read material file (*.material)
+    //
+    std::ifstream ifpMat;
 
-	ifpMat.open((phantomDataPath + "/" + materialFile).c_str());
-	if (!ifpMat.is_open()) {
-		// exception for the case when there is no *.material file
-		G4Exception("TETModelImport::DataRead", "", FatalErrorInArgument,
-					G4String("      There is no " + materialFile ).c_str());
-	}
+    ifpMat.open((phantomDataPath + "/" + materialFile).c_str());
+    if (!ifpMat.is_open())
+    {
+        // exception for the case when there is no *.material file
+        G4Exception("TETModelImport::DataRead", "", FatalErrorInArgument,
+                    G4String("      There is no " + materialFile).c_str());
+    }
 
-	G4cout << "  Opening material file '" << materialFile << "'" << G4endl;
+    G4cout << "  Opening material file '" << materialFile << "'" << G4endl;
 
-	char read_data[50];
-	char* token;
-	G4double zaid;
-	G4double fraction;
-	G4String MaterialName;
-	G4double density;
-	while (!ifpMat.eof()) {
-		ifpMat >> read_data;                   //ex) 'C' RBM
-		ifpMat >> MaterialName;                //ex)  C 'RBM'
-		ifpMat >> read_data;
-		density = std::atof(read_data);        //ex) 1.30
-		ifpMat >> read_data;                   //ex) g/cm3
-		ifpMat >> read_data;
-		token = std::strtok(read_data,"m");
-		G4int matID = std::atoi(token);         //ex) m'10'
-		materialIndex.push_back(matID);
-		organNameMap[matID] = MaterialName;
-		densityMap[matID] = density * g / cm3;
+    char read_data[50];
+    char *token;
+    G4double zaid;
+    G4double fraction;
+    G4String MaterialName;
+    G4double density;
+    while (!ifpMat.eof())
+    {
+        ifpMat >> read_data;    //ex) 'C' RBM
+        ifpMat >> MaterialName; //ex)  C 'RBM'
+        ifpMat >> read_data;
+        density = std::atof(read_data); //ex) 1.30
+        ifpMat >> read_data;            //ex) g/cm3
+        ifpMat >> read_data;
+        token = std::strtok(read_data, "m");
+        G4int matID = std::atoi(token); //ex) m'10'
+        materialIndex.push_back(matID);
+        organNameMap[matID] = MaterialName;
+        densityMap[matID] = density * g / cm3;
 
-		while (ifpMat >> read_data) {
-			if (std::strcmp(read_data, "C") == 0 || ifpMat.eof()) break;
+        while (ifpMat >> read_data)
+        {
+            if (std::strcmp(read_data, "C") == 0 || ifpMat.eof())
+                break;
 
-			zaid = (G4int)(std::atoi(read_data)/1000);
-			ifpMat >> read_data;
-			fraction = -1.0 * std::atof(read_data);
-			materialIndexMap[matID].push_back(std::make_pair(G4int(zaid), fraction));
-		}
-	}
-	ifpMat.close();
+            zaid = (G4int)(std::atoi(read_data) / 1000);
+            ifpMat >> read_data;
+            fraction = -1.0 * std::atof(read_data);
+            materialIndexMap[matID].push_back(std::make_pair(G4int(zaid), fraction));
+        }
+    }
+    ifpMat.close();
 
-	// Construct materials for each organ
-	//
-	G4NistManager* nistManager = G4NistManager::Instance();
+    // Construct materials for each organ
+    //
+    G4NistManager *nistManager = G4NistManager::Instance();
 
-	for (G4int i = 0; i < (G4int)materialIndex.size(); i++) {
-		G4int idx = materialIndex[i];
-		G4Material* mat = new G4Material(organNameMap[idx], densityMap[idx], G4int(materialIndexMap[idx].size()), kStateSolid, NTP_Temperature, STP_Pressure);
-		for (G4int j = 0; j < G4int(materialIndexMap[idx].size()); j++) {
-			mat->AddElement(nistManager->FindOrBuildElement(materialIndexMap[idx][j].first), materialIndexMap[idx][j].second);
-		}
-		materialMap[idx] = mat;
-		massMap[idx] = densityMap[idx] * volumeMap[idx];
-	}
+    for (G4int i = 0; i < (G4int)materialIndex.size(); i++)
+    {
+        G4int idx = materialIndex[i];
+        G4Material *mat = new G4Material(organNameMap[idx], densityMap[idx], G4int(materialIndexMap[idx].size()), kStateSolid, NTP_Temperature, STP_Pressure);
+        for (G4int j = 0; j < G4int(materialIndexMap[idx].size()); j++)
+        {
+            mat->AddElement(nistManager->FindOrBuildElement(materialIndexMap[idx][j].first), materialIndexMap[idx][j].second);
+        }
+        materialMap[idx] = mat;
+        massMap[idx] = densityMap[idx] * volumeMap[idx];
+    }
 }
 
 void TETModelImport::ColourRead()
 {
-	// Read colour data file (colour.dat)
-	//
-	std::ifstream ifpColour;
+    // Read colour data file (colour.dat)
+    //
+    std::ifstream ifpColour;
 
-	ifpColour.open((phantomDataPath + "/" + "MRCP_colour.dat").c_str());
-	if (!ifpColour.is_open()) {
-		// exception for the case when there is no colour.dat file
-		G4Exception("TETModelImport::DataRead","",FatalErrorInArgument,
-					G4String("Colour data file was not found ").c_str());
-	}
+    ifpColour.open((phantomDataPath + "/" + "MRCP_colour.dat").c_str());
+    if (!ifpColour.is_open())
+    {
+        // exception for the case when there is no colour.dat file
+        G4Exception("TETModelImport::DataRead", "", FatalErrorInArgument,
+                    G4String("Colour data file was not found ").c_str());
+    }
 
-	G4cout << "  Opening colour data file 'MRCP_colour.dat'" << G4endl;
+    G4cout << "  Opening colour data file 'MRCP_colour.dat'" << G4endl;
 
-	G4int organID;
-	G4double red, green, blue, alpha;
-	while (ifpColour >> organID >> red >> green >> blue >> alpha) {
-		colourMap[organID] = G4Colour(red, green, blue, alpha);
-	}
+    G4int organID;
+    G4double red, green, blue, alpha;
+    while (ifpColour >> organID >> red >> green >> blue >> alpha)
+    {
+        colourMap[organID] = G4Colour(red, green, blue, alpha);
+    }
 
-	ifpColour.close();
+    ifpColour.close();
 }
 
 void TETModelImport::PrintMaterialInfomation()
 {
-	// Print the overal information for each organ
-	//
-	G4cout << G4endl
-		   << std::setw(9)  << "Organ ID"
-		   << std::setw(11) << "# of Tet"
-		   << std::setw(11) << "vol [cm3]"
-		   << std::setw(11) << "d [g/cm3]"
-		   << std::setw(11) << "mass [g]"
-		   << "    " << "organ/tissue" << G4endl ;
-	G4cout << "------------------------------------------------------------------------" << G4endl;
+    // Print the overal information for each organ
+    //
+    G4cout << G4endl
+           << std::setw(9) << "Organ ID"
+           << std::setw(11) << "# of Tet"
+           << std::setw(11) << "vol [cm3]"
+           << std::setw(11) << "d [g/cm3]"
+           << std::setw(11) << "mass [g]"
+           << "    "
+           << "organ/tissue" << G4endl;
+    G4cout << "------------------------------------------------------------------------" << G4endl;
 
-	std::map<G4int, G4Material*>::iterator matIter;
-	G4cout << std::setiosflags(std::ios::fixed);
-	G4cout.precision(3);
-	for (matIter = materialMap.begin(); matIter != materialMap.end(); matIter++) {
-		G4int idx = matIter->first;
+    std::map<G4int, G4Material *>::iterator matIter;
+    G4cout << std::setiosflags(std::ios::fixed);
+    G4cout.precision(3);
+    for (matIter = materialMap.begin(); matIter != materialMap.end(); matIter++)
+    {
+        G4int idx = matIter->first;
 
-		G4cout << std::setw(9)  << idx                                     // organ ID
-			   << std::setw(11) << numTetMap[idx]                          // # of tetrahedrons
-			   << std::setw(11) << volumeMap[idx]/cm3                      // organ volume
-			   << std::setw(11) << materialMap[idx]->GetDensity()/(g/cm3)  // organ density
-			   << std::setw(11) << massMap[idx]/g                          // organ mass
-			   << "    "        << materialMap[idx]->GetName() << G4endl;  // organ name
-	}
+        G4cout << std::setw(9) << idx                                         // organ ID
+               << std::setw(11) << numTetMap[idx]                             // # of tetrahedrons
+               << std::setw(11) << volumeMap[idx] / cm3                       // organ volume
+               << std::setw(11) << materialMap[idx]->GetDensity() / (g / cm3) // organ density
+               << std::setw(11) << massMap[idx] / g                           // organ mass
+               << "    " << materialMap[idx]->GetName() << G4endl;            // organ name
+    }
 }

@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETDetectorConstruction.hh
-// \file   MRCP_GEANT4/Internal/include/TETDetectorConstruction.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETDetectorConstruction.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETDetectorConstruction_h
@@ -75,27 +76,27 @@ typedef std::map<std::pair<G4int, G4int>, G4double> map_pair;
 class TETDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-	TETDetectorConstruction(TETModelImport* tetData);
-	virtual ~TETDetectorConstruction();
+    TETDetectorConstruction(TETModelImport *tetData);
+    virtual ~TETDetectorConstruction();
 
-	virtual G4VPhysicalVolume* Construct();
-	virtual void ConstructSDandField();
+    virtual G4VPhysicalVolume *Construct();
+    virtual void ConstructSDandField();
 
 private:
-	void SetupWorldGeometry();
-	void ConstructPhantom();
-	void ReadEffectiveDoseParameter();
-	void PrintPhantomInformation();
+    void SetupWorldGeometry();
+    void ConstructPhantom();
+    void ReadEffectiveDoseParameter();
+    void PrintPhantomInformation();
 
-	G4VPhysicalVolume* worldPhysical;
-	G4LogicalVolume*   container_logic;
+    G4VPhysicalVolume *worldPhysical;
+    G4LogicalVolume *container_logic;
 
-	TETModelImport*    tetData;
-	G4ThreeVector      phantomSize;
-	G4ThreeVector      phantomBoxMin, phantomBoxMax;
-	G4int              nOfTetrahedrons;
+    TETModelImport *tetData;
+    G4ThreeVector phantomSize;
+    G4ThreeVector phantomBoxMin, phantomBoxMax;
+    G4int nOfTetrahedrons;
 
-	G4LogicalVolume*   tetLogic;
+    G4LogicalVolume *tetLogic;
 };
 
 #endif

@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETParameterisation.hh
-// \file   MRCP_GEANT4/Internal/include/TETParameterisation.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETParameterisation.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETParameterisation_h
@@ -44,8 +45,7 @@
 class G4VPhysicalVolume;
 
 // *********************************************************************
-// This class defines the phantom geometry by using G4PVParameterisation
-// class.
+// This class defines the phantom geometry by using G4PVParameterisation class.
 // -- ComputeSolid: return the G4Tet* for each element
 // -- ComputeMaterial: return the G4Material* corresponding to each organ,
 //                     and set the colours for visualization purposes
@@ -53,24 +53,19 @@ class G4VPhysicalVolume;
 
 class TETParameterisation : public G4VPVParameterisation
 {
-  public:
-    TETParameterisation(TETModelImport* tetData);
+public:
+    TETParameterisation(TETModelImport *tetData);
     virtual ~TETParameterisation();
-    
-    virtual G4VSolid* ComputeSolid(
-    		       const G4int copyNo, G4VPhysicalVolume* );
-    
-    virtual void ComputeTransformation(
-                   const G4int,G4VPhysicalVolume*) const;
+    virtual G4VSolid *ComputeSolid(const G4int copyNo, G4VPhysicalVolume *);
+    virtual void ComputeTransformation(const G4int, G4VPhysicalVolume *) const;
+    virtual G4Material *ComputeMaterial(const G4int copyNo,
+                                        G4VPhysicalVolume *phy,
+                                        const G4VTouchable *);
 
-    virtual G4Material* ComputeMaterial(const G4int copyNo,
-                                        G4VPhysicalVolume* phy,
-                                        const G4VTouchable*);
-
-  private:
-    TETModelImport* tetData;
-    std::map<G4int, G4VisAttributes*>  visAttMap;
-    G4bool                             isforVis;
+private:
+    TETModelImport *tetData;
+    std::map<G4int, G4VisAttributes *> visAttMap;
+    G4bool isforVis;
 };
 
 #endif

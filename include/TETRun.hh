@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETRun.hh
-// \file   MRCP_GEANT4/Internal/include/TETRun.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETRun.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETRun_h
@@ -48,17 +49,17 @@ typedef std::map<G4int, std::pair<G4double, G4double>> EDEPMAP;
 // -- Merge: Merge the data calculated in each thread.
 // *********************************************************************
 
-class TETRun : public G4Run 
+class TETRun : public G4Run
 {
 public:
-	TETRun();
-	virtual ~TETRun();
+    TETRun();
+    virtual ~TETRun();
 
-	virtual void RecordEvent(const G4Event*);
-	void ConstructMFD(const G4String& mfdName);
-    virtual void Merge(const G4Run*);
+    virtual void RecordEvent(const G4Event *);
+    void ConstructMFD(const G4String &mfdName);
+    virtual void Merge(const G4Run *);
 
-    EDEPMAP* GetEdepMap() {return &edepMap;};
+    EDEPMAP *GetEdepMap() { return &edepMap; };
 
 private:
     EDEPMAP edepMap;

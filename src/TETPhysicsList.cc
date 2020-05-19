@@ -24,32 +24,33 @@
 // ********************************************************************
 //
 // TETPhysicsList.cc
-// \file   MRCP_GEANT4/Internal/src/TETPhysicsList.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETPhysicsList.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETPhysicsList.hh"
 
-TETPhysicsList::TETPhysicsList():G4VModularPhysicsList()
+TETPhysicsList::TETPhysicsList() : G4VModularPhysicsList()
 {
-	G4int verb=0;
-	SetVerboseLevel(verb);
+    G4int verb = 0;
+    SetVerboseLevel(verb);
 
-	// EM physics
-	RegisterPhysics(new G4EmLivermorePhysics());
+    // EM physics
+    RegisterPhysics(new G4EmLivermorePhysics());
 
-	// Decay
-	RegisterPhysics(new G4DecayPhysics());
+    // Decay
+    RegisterPhysics(new G4DecayPhysics());
 
-	// Radioactive decay
-	RegisterPhysics(new G4RadioactiveDecayPhysics());
+    // Radioactive decay
+    RegisterPhysics(new G4RadioactiveDecayPhysics());
 }
 
 TETPhysicsList::~TETPhysicsList()
-{}
+{
+}
 
 void TETPhysicsList::SetCuts()
 {
-	SetCutsWithDefault();
+    SetCutsWithDefault();
 }
-

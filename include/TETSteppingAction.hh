@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETSteppingAction.hh
-// \file   MRCP_GEANT4/External/include/TETSteppingAction.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETSteppingAction.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETSteppingAction_h
@@ -50,16 +51,16 @@ class G4LogicalVolume;
 
 class TETSteppingAction : public G4UserSteppingAction
 {
-  public:
+public:
     TETSteppingAction();
     virtual ~TETSteppingAction();
 
-    virtual void UserSteppingAction(const G4Step*);
+    virtual void UserSteppingAction(const G4Step *);
 
-  private:
+private:
     G4double kCarTolerance;
-    G4int    stepCounter;
-    G4bool   checkFlag;
+    G4int stepCounter;
+    G4bool checkFlag;
 };
 
 #endif

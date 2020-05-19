@@ -24,56 +24,53 @@
 // ********************************************************************
 //
 // TETRun.cc
-// \file   MRCP_GEANT4/Internal/src/TETRun.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETRun.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETRun.hh"
 
-TETRun::TETRun()
-:G4Run()
-{}
+TETRun::TETRun() : G4Run()
+{
+}
 
 TETRun::~TETRun()
 {
-	edepMap.clear();
+    edepMap.clear();
 }
 
-void TETRun::RecordEvent(const G4Event* event)
+void TETRun::RecordEvent(const G4Event *event)
 {
-	auto  fCollID
-	= G4SDManager::GetSDMpointer()->GetCollectionID("PhantomSD/eDep");
+    auto fCollID = G4SDManager::GetSDMpointer()->GetCollectionID("PhantomSD/eDep");
 
-	//Hits collections
-	//
-	G4HCofThisEvent* HCE = event->GetHCofThisEvent();
-	if(!HCE) return;
+    //Hits collections
+    //
+    G4HCofThisEvent *HCE = event->GetHCofThisEvent();
+    if (!HCE)
+        return;
 
-	G4THitsMap<G4double>* evtMap =
-			static_cast<G4THitsMap<G4double>*>(HCE->GetHC(fCollID));
+    G4THitsMap<G4double> *evtMap =
+        static_cast<G4THitsMap<G4double> *>(HCE->GetHC(fCollID));
 
-	// sum up the energy deposition and the square of it
-	for (auto itr : *evtMap->GetMap()) {
-		edepMap[itr.first].first  += *itr.second;                   //sum
-		edepMap[itr.first].second += (*itr.second) * (*itr.second); //sum square
-	}
+    // sum up the energy deposition and the square of it
+    for (auto itr : *evtMap->GetMap())
+    {
+        edepMap[itr.first].first += *itr.second;                    //sum
+        edepMap[itr.first].second += (*itr.second) * (*itr.second); //sum square
+    }
 }
 
-void TETRun::Merge(const G4Run* run)
+void TETRun::Merge(const G4Run *run)
 {
-	// merge the data from each thread
-	EDEPMAP localMap = static_cast<const TETRun*>(run)->edepMap;
+    // merge the data from each thread
+    EDEPMAP localMap = static_cast<const TETRun *>(run)->edepMap;
 
-	for(auto itr : localMap){
-		edepMap[itr.first].first  += itr.second.first;
-		edepMap[itr.first].second += itr.second.second;
-	}
+    for (auto itr : localMap)
+    {
+        edepMap[itr.first].first += itr.second.first;
+        edepMap[itr.first].second += itr.second.second;
+    }
 
-	G4Run::Merge(run);
+    G4Run::Merge(run);
 }
-
-
-
-
-
-

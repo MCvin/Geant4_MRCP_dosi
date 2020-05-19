@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETPSEnergyDeposit.hh
-// \file   MRCP_GEANT4/Internal/include/TETPSEnergyDeposit.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETPSEnergyDeposit.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETPSEnergyDeposit_h
@@ -42,16 +43,15 @@
 
 class TETPSEnergyDeposit : public G4PSEnergyDeposit
 {
-   public:
-      TETPSEnergyDeposit(G4String name,TETModelImport* _tetData);
-      virtual ~TETPSEnergyDeposit();
+public:
+    TETPSEnergyDeposit(G4String name, TETModelImport *_tetData);
+    virtual ~TETPSEnergyDeposit();
 
-  protected:
-      virtual G4int GetIndex(G4Step*);
+protected:
+    virtual G4int GetIndex(G4Step *);
 
-  private:
-      TETModelImport* tetData;
+private:
+    TETModelImport *tetData;
 };
 
 #endif
-

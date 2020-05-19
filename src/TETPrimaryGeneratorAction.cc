@@ -24,48 +24,51 @@
 // ********************************************************************
 //
 // TETPrimaryGeneratorAction.cc
-// \file   MRCP_GEANT4/Internal/src/TETPrimaryGeneratorAction.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETPrimaryGeneratorAction.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETPrimaryGeneratorAction.hh"
 
-TETPrimaryGeneratorAction::TETPrimaryGeneratorAction(TETModelImport* tetData, G4int internalSource)
-:G4VUserPrimaryGeneratorAction()
+TETPrimaryGeneratorAction::TETPrimaryGeneratorAction(TETModelImport *tetData, G4int internalSource)
+    : G4VUserPrimaryGeneratorAction()
 {
-	// Find the tetrahedrons to be the source
-	//
-	G4double xMin(DBL_MAX), yMin(DBL_MAX), zMin(DBL_MAX);
-	G4double xMax(DBL_MIN), yMax(DBL_MIN), zMax(DBL_MIN);
-	for(G4int i=0;i<tetData->GetNumTetrahedron();i++){
-		if(tetData->GetMaterialIndex(i) != internalSource) continue;
-		G4Tet* tetSolid = tetData->GetTetrahedron(i);
-		for(auto vertex:tetSolid->GetVertices()){
+    // Find the tetrahedrons to be the source
+    //
+    G4double xMin(DBL_MAX), yMin(DBL_MAX), zMin(DBL_MAX);
+    G4double xMax(DBL_MIN), yMax(DBL_MIN), zMax(DBL_MIN);
+    for (G4int i = 0; i < tetData->GetNumTetrahedron(); i++)
+    {
+        if (tetData->GetMaterialIndex(i) != internalSource)
+            continue;
+        G4Tet *tetSolid = tetData->GetTetrahedron(i);
+        for (auto vertex : tetSolid->GetVertices())
+        {
 			if      (vertex.getX() < xMin) xMin = vertex.getX();
 			else if (vertex.getX() > xMax) xMax = vertex.getX();
 			if      (vertex.getY() < yMin) yMin = vertex.getY();
 			else if (vertex.getY() > yMax) yMax = vertex.getY();
 			if      (vertex.getZ() < zMin) zMin = vertex.getZ();
 			else if (vertex.getZ() > zMax) zMax = vertex.getZ();
-		}
-		internalTetVec.push_back(tetData->GetTetrahedron(i));
-	}
+        }
+        internalTetVec.push_back(tetData->GetTetrahedron(i));
+    }
 
-	if(internalTetVec.empty())
-		G4Exception("TETPrimaryGeneratorAction::TETPrimaryGeneratorAction","",FatalErrorInArgument,
-				     G4String("There is no tetrahedron for internal source").c_str());
+    if (internalTetVec.empty())
+        G4Exception("TETPrimaryGeneratorAction::TETPrimaryGeneratorAction", "", FatalErrorInArgument,
+                    G4String("There is no tetrahedron for internal source").c_str());
 
-	bBoxMin = G4ThreeVector(xMin, yMin, zMin);
-	bBoxDim = G4ThreeVector(xMax-xMin, yMax-yMin, zMax-zMin);
+    bBoxMin = G4ThreeVector(xMin, yMin, zMin);
+    bBoxDim = G4ThreeVector(xMax - xMin, yMax - yMin, zMax - zMin);
 
-	// initialise particle gun
-	//
-	fParticleGun = new G4ParticleGun(1);
-	G4ParticleDefinition* particle
-		= G4ParticleTable::GetParticleTable()->FindParticle("gamma");
-	fParticleGun->SetParticleDefinition(particle);
-	fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1., 0., 0.));
-	fParticleGun->SetParticleEnergy(1.*MeV);
+    // initialise particle gun
+    //
+    fParticleGun = new G4ParticleGun(1);
+    G4ParticleDefinition *particle = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+    fParticleGun->SetParticleDefinition(particle);
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1., 0., 0.));
+    fParticleGun->SetParticleEnergy(1. * MeV);
 }
 
 TETPrimaryGeneratorAction::~TETPrimaryGeneratorAction()
@@ -73,27 +76,29 @@ TETPrimaryGeneratorAction::~TETPrimaryGeneratorAction()
     delete fParticleGun;
 }
 
-void TETPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+void TETPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 {
-	// Sampling the position of the source (rejection method)
-	//
-	G4bool        insideChk(false);
-	G4ThreeVector pos;
-	do{
-		pos = G4ThreeVector(bBoxMin.getX()+bBoxDim.getX()*G4UniformRand(),
-		                    bBoxMin.getY()+bBoxDim.getY()*G4UniformRand(),
-		                    bBoxMin.getZ()+bBoxDim.getZ()*G4UniformRand());
+    // Sampling the position of the source (rejection method)
+    //
+    G4bool insideChk(false);
+    G4ThreeVector pos;
+    do
+    {
+        pos = G4ThreeVector(bBoxMin.getX() + bBoxDim.getX() * G4UniformRand(),
+                            bBoxMin.getY() + bBoxDim.getY() * G4UniformRand(),
+                            bBoxMin.getZ() + bBoxDim.getZ() * G4UniformRand());
 
-		for(auto tet:internalTetVec){
-			if(tet->Inside(pos) == kOutside) continue;
-			insideChk = true;
-			break;
-		}
-	}while(!insideChk);
+        for (auto tet : internalTetVec)
+        {
+            if (tet->Inside(pos) == kOutside)
+                continue;
+            insideChk = true;
+            break;
+        }
+    } while (!insideChk);
 
-	// set the position and direction of a primary particle, and generate it
-	fParticleGun->SetParticlePosition(pos);
-	fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
-	fParticleGun->GeneratePrimaryVertex(anEvent);
+    // set the position and direction of a primary particle, and generate it
+    fParticleGun->SetParticlePosition(pos);
+    fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
+    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
-

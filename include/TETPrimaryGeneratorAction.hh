@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETPrimaryGeneratorAction.hh
-// \file   MRCP_GEANT4/Internal/include/TETPrimaryGeneratorAction.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETPrimaryGeneratorAction.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETPrimaryGeneratorAction_h
@@ -55,19 +56,18 @@
 
 class TETPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
-  public:
-	TETPrimaryGeneratorAction(TETModelImport* tetData, G4int internalSource);
-	virtual ~TETPrimaryGeneratorAction();
+public:
+    TETPrimaryGeneratorAction(TETModelImport *tetData, G4int internalSource);
+    virtual ~TETPrimaryGeneratorAction();
 
-  public:
-    virtual void GeneratePrimaries(G4Event* anEvent);
+public:
+    virtual void GeneratePrimaries(G4Event *anEvent);
 
-  private:
-    std::vector<G4Tet*>      internalTetVec;
-    G4ThreeVector            bBoxMin;
-    G4ThreeVector            bBoxDim;
-    G4ParticleGun*           fParticleGun;
+private:
+    std::vector<G4Tet *> internalTetVec;
+    G4ThreeVector bBoxMin;
+    G4ThreeVector bBoxDim;
+    G4ParticleGun *fParticleGun;
 };
 
 #endif
-

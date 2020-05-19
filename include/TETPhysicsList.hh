@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETPhysicsList.hh
-// \file   MRCP_GEANT4/Internal/include/TETPhysicsList.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETPhysicsList.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETPhysicsList_h
@@ -49,13 +50,13 @@ class G4VPhysicsConstructor;
 //             modified according to specific purposes or applications.
 // *********************************************************************
 
-class TETPhysicsList: public G4VModularPhysicsList
+class TETPhysicsList : public G4VModularPhysicsList
 {
 public:
-	TETPhysicsList();
-	virtual ~TETPhysicsList();
+    TETPhysicsList();
+    virtual ~TETPhysicsList();
 
-	virtual void SetCuts();
+    virtual void SetCuts();
 };
 
 #endif

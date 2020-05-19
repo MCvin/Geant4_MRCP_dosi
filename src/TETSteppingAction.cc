@@ -53,7 +53,7 @@ void TETSteppingAction::UserSteppingAction(const G4Step *step)
         if (checkFlag && stepCounter >= 5)
         {
             // kill the track if the particle is stuck even after the slight move
-            // (this hardly occurs)
+            // (this hardly occurs) -> ! dangerous: do we want this ?
             theTrack->SetTrackStatus(fStopAndKill);
             stepCounter = 0;
             checkFlag = 0;

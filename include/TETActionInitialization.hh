@@ -24,8 +24,9 @@
 // ********************************************************************
 //
 // TETActionInitialization.hh
-// \file   MRCP_GEANT4/Internal/include/TETActionInitialization.hh
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/include/TETActionInitialization.hh
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #ifndef TETActionInitialization_h
@@ -50,21 +51,19 @@ class TETModelImport;
 
 class TETActionInitialization : public G4VUserActionInitialization
 {
-  public:
-	TETActionInitialization(TETModelImport* tetData,
-			                G4int           internalSource,
-							G4String        outputFileName);
-	virtual ~TETActionInitialization();
+public:
+    TETActionInitialization(TETModelImport *tetData,
+                            G4int internalSource,
+                            G4String outputFileName);
+    virtual ~TETActionInitialization();
 
-	virtual void BuildForMaster() const;
-	virtual void Build() const;
+    virtual void BuildForMaster() const;
+    virtual void Build() const;
 
-  private:
-	TETModelImport* tetData;
-	G4int           internalSource;
-	G4String        output;
+private:
+    TETModelImport *tetData;
+    G4int internalSource;
+    G4String output;
 };
 
 #endif
-
-    

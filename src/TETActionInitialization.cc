@@ -24,29 +24,31 @@
 // ********************************************************************
 //
 // TETActionInitialization.cc
-// \file   MRCP_GEANT4/Internal/src/TETActionInitialization.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETActionInitialization.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETActionInitialization.hh"
 
-TETActionInitialization::TETActionInitialization(TETModelImport* _tetData, G4int _i, G4String _output)
- : G4VUserActionInitialization(), tetData(_tetData), internalSource(_i), output(_output)
-{}
+TETActionInitialization::TETActionInitialization(TETModelImport *_tetData, G4int _i, G4String _output)
+    : G4VUserActionInitialization(), tetData(_tetData), internalSource(_i), output(_output)
+{
+}
 
 TETActionInitialization::~TETActionInitialization()
-{}
+{
+}
 
 void TETActionInitialization::BuildForMaster() const
 {
-	SetUserAction(new TETRunAction(tetData, output));
+    SetUserAction(new TETRunAction(tetData, output));
 }
 
 void TETActionInitialization::Build() const
 {
-	// initialise UserAction classes
-	SetUserAction(new TETPrimaryGeneratorAction(tetData, internalSource));
-	SetUserAction(new TETRunAction(tetData, output));
-	SetUserAction(new TETSteppingAction);
-}  
-
+    // initialise UserAction classes
+    SetUserAction(new TETPrimaryGeneratorAction(tetData, internalSource));
+    SetUserAction(new TETRunAction(tetData, output));
+    SetUserAction(new TETSteppingAction);
+}

@@ -24,22 +24,25 @@
 // ********************************************************************
 //
 // TETPSEnergyDeposit.cc
-// \file   MRCP_GEANT4/External/src/TETPSEnergyDeposit.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETPSEnergyDeposit.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETPSEnergyDeposit.hh"
 
-TETPSEnergyDeposit::TETPSEnergyDeposit(G4String name, TETModelImport* _tetData)
-  :G4PSEnergyDeposit(name),tetData(_tetData)
-{}
+TETPSEnergyDeposit::TETPSEnergyDeposit(G4String name, TETModelImport *_tetData)
+    : G4PSEnergyDeposit(name), tetData(_tetData)
+{
+}
 
 TETPSEnergyDeposit::~TETPSEnergyDeposit()
-{}
-
-G4int TETPSEnergyDeposit::GetIndex(G4Step* aStep)
 {
-	// return the organ ID (= material index)
-	G4int copyNo = aStep->GetPreStepPoint()->GetTouchable()->GetCopyNumber();
-	return tetData->GetMaterialIndex(copyNo);
+}
+
+G4int TETPSEnergyDeposit::GetIndex(G4Step *aStep)
+{
+    // return the organ ID (= material index)
+    G4int copyNo = aStep->GetPreStepPoint()->GetTouchable()->GetCopyNumber();
+    return tetData->GetMaterialIndex(copyNo);
 }
