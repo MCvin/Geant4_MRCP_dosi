@@ -24,12 +24,13 @@
 // ********************************************************************
 //
 // MRCP_dosi.cc
-// \file   Geant4_MRCP_dosi/MRCP_dosi.cc
-// \author Maxime Chauvin chauvin.maxime@gmail.com
+// file  : Geant4_MRCP_dosi/MRCP_dosi.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
 // based on Internal.cc by Haegin Han
+//
 
-#include "TETDetectorConstruction.hh"
 #include "TETModelImport.hh"
+#include "TETDetectorConstruction.hh"
 #include "TETPhysicsList.hh"
 #include "TETActionInitialization.hh"
 
@@ -65,7 +66,7 @@ int main(int argc, char** argv) {
 
     if ((argc != 5) and (argc != 9)) return PrintUsage();
     for ( G4int i = 1; i < argc; i++ ) {
-        // model
+        // model: AF or AM
         if ( G4String(argv[i]) == "-m" ) {
             if ( G4String(argv[i+1]) == "AF" ) {
                 isAF = true;
@@ -79,7 +80,7 @@ int main(int argc, char** argv) {
             n_arg += 1;
             i++;
         }
-        // ID of the source organ
+        // source: organ/tissue id
         else if ( G4String(argv[i]) == "-s" ) {
             internalSource = (G4int)(std::atoi(argv[i+1]));
             n_arg += 10;
@@ -116,8 +117,8 @@ int main(int argc, char** argv) {
     #endif
 
     // Set up the pseudo random generator (default: MixMax best for MT jobs)
-    G4Random::setTheSeed(time(0));                                          // set seed(G4long)
-    G4cout << "Random engine seed:  " << G4Random::getTheSeed() << G4endl;  // get current seed
+    G4Random::setTheSeed(time(0));  // set seed(G4long)
+    G4cout << "Random engine seed:  " << G4Random::getTheSeed() << G4endl;
     G4Random::showEngineStatus();
 
     // Set a class to import phantom data

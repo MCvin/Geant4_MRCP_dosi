@@ -24,45 +24,48 @@
 // ********************************************************************
 //
 // TETSteppingAction.cc
-// \file   MRCP_GEANT4/Internal/src/TETSteppingAction.cc
-// \author Haegin Han
+// file  : Geant4_MRCP_dosi/src/TETSteppingAction.cc
+// author: Maxime Chauvin chauvin.maxime@gmail.com
+// based on code developed by Haegin Han
 //
 
 #include "TETSteppingAction.hh"
 
-
 TETSteppingAction::TETSteppingAction()
-: G4UserSteppingAction(), kCarTolerance(1.0000000000000002e-07), stepCounter(0), checkFlag(0)
-{}
+    : G4UserSteppingAction(), kCarTolerance(1.0000000000000002e-07), stepCounter(0), checkFlag(0)
+{
+}
 
 TETSteppingAction::~TETSteppingAction()
-{}
-
-void TETSteppingAction::UserSteppingAction(const G4Step* step)
 {
-	// Slightly move the particle when the step length of five continuous steps is
-	// shorter than the tolerance (0.1 nm)
-	//
-	G4Track* theTrack = step->GetTrack();
-	G4bool CheckingLength = (step->GetStepLength() < kCarTolerance);
-	if(CheckingLength)
-	{
-		++stepCounter;
-		if( checkFlag && stepCounter>=5 )
-		{
-			// kill the track if the particle is stuck even after the slight move
-			// (this hardly occurs)
-			theTrack->SetTrackStatus(fStopAndKill);
-			stepCounter=0;
-			checkFlag=0;
-		}
-		else if( stepCounter>=5 )
-		{
-			// if a particle is at the same position (step length < 0.1 nm) for five consecutive steps,
-			// slightly move (0.1 nm) the stuck particle in the direction of momentum
-			theTrack->SetPosition(theTrack->GetPosition() + theTrack->GetMomentumDirection()*kCarTolerance);
-			checkFlag=1;
-		}
-	}
-	else stepCounter=0;
+}
+
+void TETSteppingAction::UserSteppingAction(const G4Step *step)
+{
+    // Slightly move the particle when the step length of five continuous steps is
+    // shorter than the tolerance (0.1 nm)
+    //
+    G4Track *theTrack = step->GetTrack();
+    G4bool CheckingLength = (step->GetStepLength() < kCarTolerance);
+    if (CheckingLength)
+    {
+        ++stepCounter;
+        if (checkFlag && stepCounter >= 5)
+        {
+            // kill the track if the particle is stuck even after the slight move
+            // (this hardly occurs)
+            theTrack->SetTrackStatus(fStopAndKill);
+            stepCounter = 0;
+            checkFlag = 0;
+        }
+        else if (stepCounter >= 5)
+        {
+            // if a particle is at the same position (step length < 0.1 nm) for five consecutive steps,
+            // slightly move (0.1 nm) the stuck particle in the direction of momentum
+            theTrack->SetPosition(theTrack->GetPosition() + theTrack->GetMomentumDirection() * kCarTolerance);
+            checkFlag = 1;
+        }
+    }
+    else
+        stepCounter = 0;
 }
