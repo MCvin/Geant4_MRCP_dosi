@@ -135,5 +135,5 @@ Execute MRCP_dosi in batch mode with macro files (without visualization):
 ## D - MULTITHREADED MODE
 
 This application can (and should) be run in multithreaded mode if Geant4 was 
-build with support for multithreading (GEANT4_BUILD_MULTITHREADED=ON). 
-The number of threads can be set in the input macro file (see mac/run.mac).
+build with support for multithreading. The number of threads can be set in the 
+input macro file (see mac/run.mac).
