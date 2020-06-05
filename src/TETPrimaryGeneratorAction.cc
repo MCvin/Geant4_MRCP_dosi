@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // TETPrimaryGeneratorAction.cc
-// file  : Geant4_MRCP_dosi/src/TETPrimaryGeneratorAction.cc
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/src/TETPrimaryGeneratorAction.cc
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #include "TETPrimaryGeneratorAction.hh"

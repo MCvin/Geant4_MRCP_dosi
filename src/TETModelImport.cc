@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // TETModelImport.cc
-// file  : Geant4_MRCP_dosi/src/TETModelImport.cc
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/src/TETModelImport.cc
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #include "TETModelImport.hh"

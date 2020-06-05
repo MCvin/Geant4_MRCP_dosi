@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // TETPhysicsList.hh
-// file  : Geant4_MRCP_dosi/include/TETPhysicsList.hh
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/include/TETPhysicsList.hh
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #ifndef TETPhysicsList_h

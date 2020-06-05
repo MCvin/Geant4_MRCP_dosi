@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // TETDetectorConstruction.cc
-// file  : Geant4_MRCP_dosi/src/TETDetectorConstruction.cc
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/src/TETDetectorConstruction.cc
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #include "TETDetectorConstruction.hh"

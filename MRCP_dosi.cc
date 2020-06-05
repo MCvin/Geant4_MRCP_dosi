@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // MRCP_dosi.cc
-// file  : Geant4_MRCP_dosi/MRCP_dosi.cc
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/MRCP_dosi.cc
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #include "TETModelImport.hh"
@@ -48,11 +47,11 @@
 
 int PrintUsage()
 {
-    G4cerr << "Not the correct arguments. Usage:" << G4endl;
+    G4cerr << "Incorrect arguments... Usage:" << G4endl;
     G4cerr << " - interactive mode: ./MRCP_dosi -m [MODEL] -s [SOURCE ID]" << G4endl;
+    G4cerr << "               (ex.: ./MRCP_dosi -m AF -s 9500)" << G4endl;
     G4cerr << " - batch mode: ./MRCP_dosi -m [MODEL] -s [SOURCE ID] -i [INPUT MACRO] -o [OUTPUT]" << G4endl;
-    G4cerr << "Example: ./MRCP_dosi -m AF -s 9500" << G4endl;
-    G4cerr << "Example: ./MRCP_dosi -m AF -s 9500 -i ../mac/run.mac -o ../output/out.dat" << G4endl;
+    G4cerr << "         (ex.: ./MRCP_dosi -m AF -s 9500 -i ../mac/run.mac -o ../output/out.dat)" << G4endl;
     return 1;
 }
 

@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // TETParameterisation.hh
-// file  : Geant4_MRCP_dosi/include/TETParameterisation.hh
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/include/TETParameterisation.hh
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #ifndef TETParameterisation_h

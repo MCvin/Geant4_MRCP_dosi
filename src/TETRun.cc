@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // TETRun.cc
-// file  : Geant4_MRCP_dosi/src/TETRun.cc
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/src/TETRun.cc
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #include "TETRun.hh"
@@ -45,13 +44,11 @@ void TETRun::RecordEvent(const G4Event *event)
     auto fCollID = G4SDManager::GetSDMpointer()->GetCollectionID("PhantomSD/eDep");
 
     //Hits collections
-    //
     G4HCofThisEvent *HCE = event->GetHCofThisEvent();
     if (!HCE)
         return;
 
-    G4THitsMap<G4double> *evtMap =
-        static_cast<G4THitsMap<G4double> *>(HCE->GetHC(fCollID));
+    G4THitsMap<G4double> *evtMap = static_cast<G4THitsMap<G4double> *>(HCE->GetHC(fCollID));
 
     // sum up the energy deposition and the square of it
     for (auto itr : *evtMap->GetMap())

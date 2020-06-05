@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 // TETRunAction.hh
-// file  : Geant4_MRCP_dosi/include/TETRunAction.hh
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/include/TETRunAction.hh
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #ifndef TETRunAction_h
@@ -72,7 +71,7 @@ public:
 private:
     TETModelImport *tetData;
     TETRun *fRun;
-    G4int numOfEvent;
+    G4int nEvents;
     G4int runID;
     G4String outputFile;
 };

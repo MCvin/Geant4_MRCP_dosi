@@ -24,15 +24,14 @@
 // ********************************************************************
 //
 // TETRunAction.cc
-// file  : Geant4_MRCP_dosi/src/TETRunAction.cc
-// author: Maxime Chauvin chauvin.maxime@gmail.com
-// based on code developed by Haegin Han
+// file   : Geant4_MRCP_dosi/src/TETRunAction.cc
+// authors: Maxime Chauvin, Haegin Han
 //
 
 #include "TETRunAction.hh"
 
 TETRunAction::TETRunAction(TETModelImport *_tetData, G4String _output)
-    : tetData(_tetData), fRun(0), numOfEvent(0), runID(0), outputFile(_output)
+    : tetData(_tetData), fRun(0), nEvents(0), runID(0), outputFile(_output)
 {
 }
 
@@ -50,8 +49,8 @@ G4Run *TETRunAction::GenerateRun()
 void TETRunAction::BeginOfRunAction(const G4Run *aRun)
 {
     // print the progress at the interval of 10%
-    numOfEvent = aRun->GetNumberOfEventToBeProcessed();
-    G4RunManager::GetRunManager()->SetPrintProgress(int(numOfEvent * 0.1));
+    nEvents = aRun->GetNumberOfEventToBeProcessed();
+    G4RunManager::GetRunManager()->SetPrintProgress(int(nEvents * 0.1));
 }
 
 void TETRunAction::EndOfRunAction(const G4Run *aRun)
@@ -78,25 +77,39 @@ void TETRunAction::PrintResult(std::ostream &out)
     EDEPMAP edepMap = *fRun->GetEdepMap();
 
     out << G4endl
-        << "=====================================================================" << G4endl
-        << " Run #" << runID << " / Number of event processed : " << numOfEvent << G4endl
-        << "=====================================================================" << G4endl
-        << "organ ID| "
-        << setw(19) << "Organ Mass (g)"
-        << setw(19) << "Dose (Gy/source)"
-        << setw(19) << "Relative Error" << G4endl;
-
-    out.precision(3);
+        << "===============================================================================================================================" << G4endl
+        << " Run #" << runID << " / Number of event processed : " << nEvents << G4endl
+        << "===============================================================================================================================" << G4endl
+        << "organ ID|"
+        << setw(18) << "Mass (g)"
+        << setw(18) << "Edep (MeV)"
+        << setw(14) << "Edep_SD"
+        << setw(18) << "Edep_squared"
+        << setw(18) << "Dose (Gy)"
+        << setw(14) << "Dose_SD"
+        << setw(18) << "Dose_squared" << G4endl;
+    // ToDo: add n_hits and n_events_hits like in DoseByRegions from GATE for fluence estimation
+    out.precision(10);
     for (auto itr : tetData->GetMassMap())
     {
-        G4double meanDose = edepMap[itr.first].first / itr.second / numOfEvent;
-        G4double squareDoese = edepMap[itr.first].second / (itr.second * itr.second);
-        G4double variance = ((squareDoese / numOfEvent) - (meanDose * meanDose)) / numOfEvent;
-        G4double relativeE = sqrt(variance) / meanDose;
+        G4double edep = edepMap[itr.first].first;
+        G4double edep_sq = edepMap[itr.first].second;
+        G4double edep_var = ((edep_sq / nEvents) - (edep * edep / (nEvents * nEvents))) / (nEvents - 1);
+        G4double edep_sd = sqrt(edep_var) / (edep / nEvents);
 
-        out << setw(8) << itr.first << "| " << setw(19) << fixed << itr.second / g;
-        out << setw(19) << scientific << meanDose / (joule / kg);
-        out << setw(19) << fixed << relativeE << G4endl;
+        G4double dose = edepMap[itr.first].first / itr.second;
+        G4double dose_sq = edepMap[itr.first].second / (itr.second * itr.second);
+        G4double dose_var = ((dose_sq / nEvents) - (dose * dose / (nEvents * nEvents))) / (nEvents - 1);
+        G4double dose_sd = sqrt(dose_var) / (dose / nEvents);
+
+        out << setw(8)  << itr.first << "|"
+            << setw(18) << scientific << itr.second / g
+            << setw(18) << scientific << edep / MeV
+            << setw(14) << fixed << edep_sd
+            << setw(18) << scientific << edep_sq / MeV
+            << setw(18) << scientific << dose / (joule / kg)
+            << setw(14) << fixed << dose_sd
+            << setw(18) << scientific << dose_sq / (joule / kg) << G4endl;
     }
-    out << "=====================================================================" << G4endl << G4endl;
+    out << "===============================================================================================================================" << G4endl << G4endl;
 }
